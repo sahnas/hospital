@@ -1,0 +1,65 @@
+<div class="treatment-container">
+  
+  <ng-container *ngIf="outcomes.length > 0; else noOutcomes">
+    <h2 class="mat-h2">Treatment Outcomes</h2>
+    <mat-accordion>
+      <mat-expansion-panel 
+        *ngFor="let outcome of displayedOutcomes; let i = index"
+        [@slideIn]="'in'"
+        [expanded]="i === 0"
+        (opened)="onPanelOpened(i)"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>Run #{{outcomes.length - i}}</mat-panel-title>
+          <mat-panel-description>{{traetmentPresentationService.getTreatmentOutcomeSummary(outcome)}}</mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="treatment-content">
+          <h3 class="mat-h3">Input</h3>
+          <div class="input-container">
+            <div class="drug-container">
+              <app-drug-icon 
+                *ngFor="let drug of traetmentPresentationService.getUniqueDrugs(outcome.input.drugs)"
+                [drug]="drug"
+                [count]="traetmentPresentationService.getDrugCount(outcome.input.drugs, drug)"
+              ></app-drug-icon>
+            </div>
+            <div class="patient-container">
+              <app-patient-state-icon
+                *ngFor="let state of traetmentPresentationService.getUniquePatientStates(outcome.input.patients)"
+                [state]="state"
+                [count]="traetmentPresentationService.getPatientCount(outcome.input.patients, state)"
+              ></app-patient-state-icon>
+            </div>
+          </div>
+
+          <h3 class="mat-h3">Output</h3>
+          <div class="output-container">
+            <div *ngFor="let state of patientStates" class="state-row">
+              <app-patient-state-icon [state]="state" [count]="outcome.output[state]"></app-patient-state-icon>
+              <span class="state-name">{{getStateName(state)}}</span>
+              <mat-progress-bar
+                mode="determinate"
+                [value]="traetmentPresentationService.getPercentage(outcome.output[state], traetmentPresentationService.getTotalPatients(outcome.output))"
+                [color]="getProgressBarColor(state)">
+              </mat-progress-bar>
+              <span class="state-count">{{outcome.output[state]}}</span>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <div *ngIf="outcomes.length > displayLimit" class="show-more-container">
+      <button mat-button color="primary" (click)="showMoreOutcomes()">
+        Show More Outcomes
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-template #noOutcomes>
+    <p class="no-outcomes-message">
+      Click "Administer Drugs" to begin treatment
+    </p>
+  </ng-template>
+</div>

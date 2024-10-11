@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  hospital-be:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend
+    ports:
+      - "7200:7200"
+    volumes:
+      - ./hospital-be:/app/hospital-be
+      - ./hospital-lib:/app/hospital-lib
+      - /app/hospital-be/node_modules
+      - /app/hospital-lib/node_modules
+    environment:
+      - NODE_ENV=development
+
+  hospital-fe:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - hospital-be
+    volumes:
+      - ./hospital-fe:/app/hospital-fe
+      - ./hospital-lib:/app/hospital-lib
+      - /app/hospital-fe/node_modules
+      - /app/hospital-lib/node_modules
+    environment:
+      - NODE_ENV=development

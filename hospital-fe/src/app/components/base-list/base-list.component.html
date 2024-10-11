@@ -1,0 +1,30 @@
+<div class="list-container">
+    <ng-container *ngIf="isLoading; else loadedContent">
+      <mat-spinner diameter="40"></mat-spinner>
+    </ng-container>
+    <ng-template #loadedContent>
+      <div *ngIf="items.length > 0; else noItems">
+        <p class="total-items">Total {{ items.length > 1 ? 'items' : 'item' }}: {{ items.length }}</p>
+        <div class="item-list">
+          <div *ngFor="let item of uniqueItems" class="item" [@fadeIn]>
+            <div class="item-circle" 
+                 [ngClass]="getItemClass(item)"
+                 [matTooltip]="getItemName(item)"
+                 matTooltipPosition="above"
+                 (click)="onItemClick(item)">
+              <mat-icon [matBadge]="getItemCount(item)" matBadgePosition="after" matBadgeColor="accent">
+                {{getIconForItem(item)}}
+              </mat-icon>
+            </div>
+            <span class="item-name">{{getItemName(item)}}</span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #noItems>
+      <div class="no-items">
+        <mat-icon>sentiment_dissatisfied</mat-icon>
+        <p>No items available</p>
+      </div>
+    </ng-template>
+  </div>

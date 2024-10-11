@@ -1,0 +1,28 @@
+{
+  "name": "hospital-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "hospital-be",
+    "hospital-fe",
+    "hospital-lib"
+  ],
+  "scripts": {
+    "clean": "rm -rf hospital-lib/dist hospital-fe/node_modules hospital-be/node_modules && yarn cache clean",
+    "build:lib": "yarn workspace hospital-lib build:prod",
+    "install:fe": "yarn workspace hospital-fe install",
+    "start:be": "yarn workspace hospital-be start",
+    "start:fe": "yarn workspace hospital-fe start",
+    "prepare:all": "yarn clean && yarn build:lib && yarn install:fe",
+    "start:services": "concurrently --kill-others-on-fail --handle-input --names \"BE,FE\" --prefix \"[{name}]\" \"yarn start:be\" \"wait-on tcp:7200 && yarn start:fe\"",
+    "start:all": "yarn prepare:all && echo 'Starting all services. Press Ctrl+C to stop.' && yarn start:services || echo 'All services have been stopped.'",
+    "build:prod:be": "yarn workspace hospital-be build",
+    "build:prod:fe": "yarn workspace hospital-fe build",
+    "start:prod:be": "node hospital-be/dist/main.js",
+    "start:prod:fe": "nginx -g 'daemon off;'"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "wait-on": "^6.0.1"
+  }
+}
