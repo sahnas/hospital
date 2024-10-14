@@ -124,6 +124,24 @@ To run the application using Docker Compose:
 
 Each project in the monorepo has its own test suites. Refer to individual READMEs for more details.
 
+## Deployment
+
+This monorepo is deployed using a CI/CD pipeline via Docker on Google Cloud Run and Google Cloud Build.
+
+### Deployment Process
+
+1. Changes are pushed to the main repository.
+2. Google Cloud Build automatically triggers a new build based on the Dockerfile in the repository.
+3. Once the build is complete, the new container image is deployed to Google Cloud Run.
+
+### Deployed Application
+
+The frontend of the application is accessible at:
+
+[https://hospital-fe-210180598510.europe-west9.run.app/](https://hospital-fe-210180598510.europe-west9.run.app/)
+
+This URL provides access to the live, production version of the Hospital Management System frontend.
+
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
